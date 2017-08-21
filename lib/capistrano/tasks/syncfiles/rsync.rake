@@ -4,7 +4,7 @@ namespace :rsync do
     "#{user}#{role.hostname}"
   end
 
-  desc "Synchronise local and remote wp content folders via rsync"
+  desc "Synchronise from local to remote folder via rsync"
   task :up do
     files = fetch(:syncfiles)
     files.each do |local_path, config|
@@ -23,7 +23,7 @@ namespace :rsync do
     end
   end
 
-  desc "Synchronise local and remote wp content folders via rsync"
+  desc "Synchronise from remote to local folder via rsync"
   task :down do
     files = fetch(:syncfiles)
     files.each do |local_path, config|
