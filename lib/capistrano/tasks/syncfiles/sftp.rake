@@ -1,4 +1,5 @@
 require 'fun_sftp'
+
 namespace :sftp do
   def connection(server, username, password)
     @connection ||= FunSftp::SFTPClient.new(server, username, password)
@@ -16,7 +17,7 @@ namespace :sftp do
     handle.mkdir!(remote_directory)
   end
 
-  desc "Synchronise local and remote wp content folders via sftp"
+  desc "Synchronise from local to remote folder via sftp"
   task :up do
     files = fetch(:syncfiles)
     files.each do |local_path, config|
@@ -47,7 +48,7 @@ namespace :sftp do
     end
   end
 
-  desc "Synchronise local and remote wp content folders via sftp"
+  desc "Synchronise from remote to local folder via sftp"
   task :down do
     files = fetch(:syncfiles)
     files.each do |local_path, config|
@@ -56,25 +57,25 @@ namespace :sftp do
       sync_roles   = fetch(:syncfiles_roles, :all)
 
       on primary sync_roles do |role|
-          handle = connection(role.hostname, role.user, fetch(:syncfiles_sftp_password))
+        handle = connection(role.hostname, role.user, fetch(:syncfiles_sftp_password))
 
-          puts "collecting files in #{remote_path}"
-          handle.glob(remote_path, "**/*").each do |remote_file|
+        puts "collecting files in #{remote_path}"
+        handle.glob(remote_path, "**/*").each do |remote_file|
 
-            remote_file = "#{remote_path}/#{remote_file}"
+          remote_file = "#{remote_path}/#{remote_file}"
 
-            local_file = remote_file.sub(remote_path, local_path)
+          local_file = remote_file.sub(remote_path, local_path)
 
-            next if exclude_dir.any? do |exclude|
-              local_file.start_with?(exclude)
-            end
-
-            `mkdir -p #{::File.dirname(local_file)}`
-
-            handle.download!(remote_file, local_file)
+          next if exclude_dir.any? do |exclude|
+            local_file.start_with?(exclude)
           end
 
+          `mkdir -p #{::File.dirname(local_file)}`
+
+          handle.download!(remote_file, local_file)
+        end
       end
     end
   end
+  
 end
