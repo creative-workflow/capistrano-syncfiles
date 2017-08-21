@@ -1,5 +1,5 @@
 namespace :tar do
-  desc "Synchronise local and remote wp content folders via rsync"
+  desc "Synchronise from local to remote folder via tar copy"
   task :up do
     files = fetch(:syncfiles)
     files.each do |local_path, config|
@@ -25,7 +25,7 @@ namespace :tar do
     end
   end
 
-  desc "Synchronise local and remote wp content folders via rsync"
+  desc "Synchronise from remote to local folder via tar copy"
   task :down do
     files = fetch(:syncfiles)
     files.each do |local_path, config|
