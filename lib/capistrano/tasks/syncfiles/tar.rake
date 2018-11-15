@@ -18,7 +18,7 @@ namespace :tar do
 
       on release_roles sync_roles do
         upload!(archive_name, tmp_file)
-        execute :tar, "-xzf", tmp_file, "-C", "#{release_path}/#{remote_path}"
+        execute :tar, "-xzf", tmp_file, "-C", "#{get_syncfiles_base_path}#{remote_path}"
         execute :rm, tmp_file
       end
       system "rm -f #{archive_name}"
@@ -38,7 +38,7 @@ namespace :tar do
       sync_roles   = fetch(:syncfiles_roles, :all)
 
       on primary sync_roles do
-        execute :tar, "-c#{tar_verbose}zf", tmp_file, "-C", "#{release_path}/#{remote_path} .", *exclude_args
+        execute :tar, "-c#{tar_verbose}zf", tmp_file, "-C", "#{get_syncfiles_base_path}#{remote_path} .", *exclude_args
 
         download!(tmp_file, archive_name)
         execute :rm, tmp_file

@@ -22,6 +22,7 @@ set :syncfiles, {
       exclude: ['fvm', 'ithemes-security', 'wc-logs']     # excluded folders/files, based on local path, works also for remote
   }
 }
+set :syncfiles_rsync_options, '-avzuO'
 
 set :syncfiles_roles, :all  # roles to run on, default: :all
 
@@ -53,8 +54,14 @@ Capistrano tasks: http://capistranorb.com/documentation/getting-started/flow/
 The MIT License (MIT)
 
 ### Changelog
+##### 1.0.0
+  * add `syncfiles_rsync_options` default options
+
+##### 0.3.0
+  * use `current_path` instead of `release_path`
+
 ##### 0.2.0
-- add sftp strategy
+  * add sftp strategy
 
 ##### 0.1.0
-- Initial release
+  * Initial release

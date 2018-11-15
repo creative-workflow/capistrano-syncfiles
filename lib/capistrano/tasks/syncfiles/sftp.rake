@@ -21,7 +21,7 @@ namespace :sftp do
   task :up do
     files = fetch(:syncfiles)
     files.each do |local_path, config|
-      remote_path  = config[:remote]
+      remote_path  = "#{get_syncfiles_base_path}#{config[:remote]}"
       exclude_dir  = Array(config[:exclude])
       exclude_args = exclude_dir.map { |dir| "! -path '#{dir}/*'"}
       sync_roles   = fetch(:syncfiles_roles, :all)
@@ -52,7 +52,7 @@ namespace :sftp do
   task :down do
     files = fetch(:syncfiles)
     files.each do |local_path, config|
-      remote_path  = config[:remote]
+      remote_path  = "#{get_syncfiles_base_path}#{config[:remote]}"
       exclude_dir  = Array(config[:exclude])
       sync_roles   = fetch(:syncfiles_roles, :all)
 
@@ -77,5 +77,5 @@ namespace :sftp do
       end
     end
   end
-  
+
 end

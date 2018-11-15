@@ -16,7 +16,9 @@ namespace :rsync do
       on release_roles sync_roles do |role|
         server = build_server_string(role)
 
-        cmd  = ["rsync -avzO #{local_path}/ #{server}:#{release_path}/#{remote_path}", *exclude_args]
+        args = fetch(:syncfiles_rsync_options)
+        args = args + " --rsync-path='sudo rsync'" if fetch(:use_sudo)
+        cmd  = ["rsync #{args} #{local_path}/ #{server}:#{get_syncfiles_base_path}#{remote_path}", *exclude_args]
         puts cmd.join(' ')
         system cmd.join(' ')
       end
@@ -35,7 +37,10 @@ namespace :rsync do
       on release_roles sync_roles do |role|
         server = build_server_string(role)
 
-        cmd  = ["rsync -avzO #{server}:#{release_path}/#{remote_path}/ #{local_path}", *exclude_args]
+        args = fetch(:syncfiles_rsync_options)
+        args = args + " --rsync-path='sudo rsync'" if fetch(:use_sudo)
+
+        cmd  = ["rsync #{args} #{server}:#{get_syncfiles_base_path}#{remote_path}/ #{local_path}", *exclude_args]
         puts cmd.join(' ')
         system cmd.join(' ')
       end
